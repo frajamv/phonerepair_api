@@ -84,6 +84,33 @@ controller.createUser = async(req, res) => {
 }
 
 /**
+ * Elimina el usuario con el id puesto por parametro. Esta funcion actualmente solo cumple la funcion de ser apoyo al modulo de testing.
+ * @param {*} req Peticion HTTP.
+ * @param {*} res Respuesta HTTP.
+ * @returns Mensaje de confirmacion o error al eliminar usuario.
+ */
+controller.deleteUser = async(req, res) => {
+    try {
+        const user_id = req.params.id;
+
+        if (!user_id)
+            return parseError(res, 400, 'Debe provisionar un usuario existente a eliminar.');
+
+        const deletion = await User.query().delete().where('user_id', user_id);
+        if (!deletion)
+            return parseError(res, 500, 'No se pudo eliminar al usuario.');
+
+        const response = {
+            message: 'Usuario eliminado de la base de datos.'
+        }
+
+        return parseSuccessOK(res, response);
+    } catch (error) {
+        return parseError(res, 500, `Error eliminando usuario: ${error}`);
+    }
+}
+
+/**
  * Obtiene todos los datos de un cliente, incluyendo su rol y sus teléfonos.
  * @param {*} req Peticion HTTP.
  * @param {*} res Respuesta HTTP.

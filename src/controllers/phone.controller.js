@@ -43,6 +43,60 @@ controller.createUserPhone = async(req, res) => {
 }
 
 /**
+ * Elimina el telefono con el id puesto por parametro. Esta funcion actualmente solo cumple la funcion de ser apoyo al modulo de testing.
+ * @param {*} req Peticion HTTP.
+ * @param {*} res Respuesta HTTP.
+ * @returns Mensaje de confirmacion o error al eliminar telefono.
+ */
+controller.deletePhone = async(req, res) => {
+    try {
+        const phone_id = req.params.id;
+
+        if (!phone_id)
+            return parseError(res, 400, 'Debe provisionar un telefono existente a eliminar.');
+
+        const deletion = await Phone.query().delete().where('phone_id', phone_id);
+        if (!deletion)
+            return parseError(res, 500, 'No se pudo eliminar al telefono.');
+
+        const response = {
+            message: 'Telefono eliminado de la base de datos.'
+        }
+
+        return parseSuccessOK(res, response);
+    } catch (error) {
+        return parseError(res, 500, `Error eliminando telefono: ${error}`);
+    }
+}
+
+/**
+ * Elimina la reparacion con el id puesto por parametro. Esta funcion actualmente solo cumple la funcion de ser apoyo al modulo de testing.
+ * @param {*} req Peticion HTTP.
+ * @param {*} res Respuesta HTTP.
+ * @returns Mensaje de confirmacion o error al eliminar reparacion.
+ */
+controller.deletePhoneRepairing = async(req, res) => {
+    try {
+        const phone_repairing_id = req.params.id;
+
+        if (!phone_repairing_id)
+            return parseError(res, 400, 'Debe provisionar una reparacion existente a eliminar.');
+
+        const deletion = await Phone_repairing.query().delete().where('phone_repairing_id', phone_repairing_id);
+        if (!deletion)
+            return parseError(res, 500, 'No se pudo eliminar la reparacion.');
+
+        const response = {
+            message: 'Reparacion eliminada de la base de datos.'
+        }
+
+        return parseSuccessOK(res, response);
+    } catch (error) {
+        return parseError(res, 500, `Error eliminando reparacion: ${error}`);
+    }
+}
+
+/**
  * Obtiene todas las reparaciones realizadas hasta el momento (si las hay).
  * @param {*} req Peticion HTTP.
  * @param {*} res Respuesta HTTP.
