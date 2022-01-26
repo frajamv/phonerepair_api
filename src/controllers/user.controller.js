@@ -25,7 +25,6 @@ controller.getAllUsers = async(req, res) => {
             .leftJoin('roles', 'roles.role_id', 'users.role_id');
         parseSuccessOK(res, users);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error obteniendo usuarios: ${error}`)
     }
 }
@@ -44,28 +43,7 @@ controller.getAllClients = async(req, res) => {
             .leftJoin('roles', 'roles.role_id', 'users.role_id');
         parseSuccessOK(res, clients);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error obteniendo clientes: ${error}`)
-    }
-}
-
-/**
- * Obtiene todos los datos de un cliente, incluyendo su rol y sus teléfonos.
- * @param {*} req Peticion HTTP.
- * @param {*} res Respuesta HTTP.
- * @returns Objeto usuario encontrado.
- */
-controller.getClientData = async(req, res) => {
-    try {
-        const id = req.params.id;
-        const data = await User.query()
-            .select('users.user_id', 'full_name', 'username', 'users.created_at')
-            .where('users.user_id', id)
-            .withGraphFetched('[role, phones]');
-        parseSuccessOK(res, data[0]);
-    } catch (error) {
-        console.log(error);
-        return parseError(res, 500, `Error obteniendo datos del cliente: ${error}`)
     }
 }
 
@@ -96,12 +74,31 @@ controller.createUser = async(req, res) => {
 
         const response = {
             message: 'Usuario creado satisfactoriamente.',
+            user_id: addition.id
         }
 
         return parseSuccess(res, 201, response);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error creando usuario: ${error}`);
+    }
+}
+
+/**
+ * Obtiene todos los datos de un cliente, incluyendo su rol y sus teléfonos.
+ * @param {*} req Peticion HTTP.
+ * @param {*} res Respuesta HTTP.
+ * @returns Objeto usuario encontrado.
+ */
+controller.getClientData = async(req, res) => {
+    try {
+        const id = req.params.id;
+        const data = await User.query()
+            .select('users.user_id', 'full_name', 'username', 'users.created_at')
+            .where('users.user_id', id)
+            .withGraphFetched('[role, phones]');
+        parseSuccessOK(res, data[0]);
+    } catch (error) {
+        return parseError(res, 500, `Error obteniendo datos del cliente: ${error}`)
     }
 }
 

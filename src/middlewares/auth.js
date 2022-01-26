@@ -13,20 +13,18 @@ const { parseError } = require('../utils/parser.utils');
  */
 const verifyToken = async(req, res, next) => {
     const token =
-        req.body.token || req.query.token || req.headers['x-access-token'];
+        req.body.token || req.query.token || req.headers['x-access-token']; // Obtener token de la peticion.
     if (!token) {
         return parseError(res, 403, 'Debe iniciar sesión para acceder al sistema.')
     }
     try {
         const decoded = jwt.verify(token, env.JWT_KEY);
-        req.user = decoded;
+        req.user = decoded; // Se guarda el objeto del token en el usuario de la peticion.
     } catch (err) {
         return res.status(403).send('Sesión inválida.');
     }
 
-    const current = await User.query().where('user_id', req.user.user_id);
-    console.log(req.user.role_id);
-    console.log(current[0].role_id);
+    const current = await User.query().where('user_id', req.user.user_id); // Obtener tados actuales del usuario en base de datos.
 
     if (!current || !current[0].role_id || current[0].role_id === '')
         return parseError(res, 403, 'El usuario no tiene roles válidos en el sistema. Sus roles han sido eliminados dentro de su sesión.');

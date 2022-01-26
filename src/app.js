@@ -17,8 +17,8 @@ app.use(morgan('dev')) // Atrapar y mostrar las peticiones al API.
 app.use(express.json()); // Permitir lectura y escritura de objetos JSON en las peticiones y respuestas.
 
 // RUTAS PRINCIPALES
-app.use('/api/users', require('./routes/users.router')); // CRUD de usuarios.
-app.use('/api/phones', require('./routes/phones.router')); // CRUD de telefonos y reparaciones.
+app.use('/api/users', require('./routes/user.router')); // CRUD de usuarios.
+app.use('/api/phones', require('./routes/phone.router')); // CRUD de telefonos y reparaciones.
 app.use('/', (req, res) => res.send("Hello world!")); // Raiz de REST API.
 
 module.exports = app;

@@ -33,11 +33,11 @@ controller.createUserPhone = async(req, res) => {
 
         const response = {
             message: 'Teléfono creado satisfactoriamente.',
+            phone_id: addition.id
         }
 
         return parseSuccess(res, 201, response);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error creando teléfono para el usuario: ${error}`);
     }
 }
@@ -54,7 +54,6 @@ controller.getAllPhoneRepairings = async(req, res) => {
             .orderBy('created_at', 'DESC');
         parseSuccessOK(res, repairings);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error obteniendo reparaciones: ${error}`)
     }
 }
@@ -73,7 +72,6 @@ controller.getPhoneRepairings = async(req, res) => {
             .orderBy('created_at', 'DESC');
         parseSuccessOK(res, repairings);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error obteniendo reparaciones: ${error}`)
     }
 }
@@ -102,11 +100,11 @@ controller.createPhoneRepairings = async(req, res) => {
 
         const response = {
             message: 'Reparación de teléfono creada satisfactoriamente.',
+            phone_repairing_id: addition.id
         }
 
         return parseSuccess(res, 201, response);
     } catch (error) {
-        console.log(error);
         return parseError(res, 500, `Error creando reparación de teléfono para el usuario: ${error}`);
     }
 }
