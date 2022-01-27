@@ -12,5 +12,5 @@ module.exports = {
         password: env.DB_PASSWORD,
         database: env.DB_NAME
     },
-    // debug: true // Poner en 'false' al desplegar.
+    debug: true // Poner en 'false' al desplegar.
 };

@@ -37,11 +37,14 @@ controller.getAllUsers = async(req, res) => {
  */
 controller.getAllClients = async(req, res) => {
     try {
-        const clients = await User.query()
-            .select('user_id', 'full_name', 'username', 'roles.name AS role', 'roles.role_id AS role_id', 'users.status')
-            .where('roles.name', 'Cliente')
-            .leftJoin('phones', 'phones.user_id', 'users.user_id')
-            .leftJoin('roles', 'roles.role_id', 'users.role_id');
+        const users = await User.query()
+            .select('users.user_id',
+                'full_name',
+                'username',
+                'status'
+            )
+            .withGraphFetched('[phones, role]')
+        const clients = users.filter(u => u.role.name = 'Cliente')
         parseSuccessOK(res, clients);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo clientes: ${error}`)
