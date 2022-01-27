@@ -8,7 +8,7 @@ class Phone_repairing extends Model {
     static get relationMappings() {
         const Phone = require('./phone.model');
         return {
-            role: {
+            phone: {
                 relation: Model.HasOneRelation,
                 modelClass: Phone,
                 join: {

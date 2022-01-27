@@ -105,6 +105,7 @@ controller.deletePhoneRepairing = async(req, res) => {
 controller.getAllPhoneRepairings = async(req, res) => {
     try {
         const repairings = await Phone_repairing.query()
+            .withGraphFetched('[phone.user]')
             .orderBy('created_at', 'DESC');
         parseSuccessOK(res, repairings);
     } catch (error) {
