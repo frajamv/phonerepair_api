@@ -44,7 +44,13 @@ controller.getAllClients = async(req, res) => {
                 'status'
             )
             .withGraphFetched('[phones, role]')
-        const clients = users.filter(u => u.role.name = 'Cliente')
+        const clients = users.filter(u => u.role.name === 'Cliente').map(c => {
+            return {
+                ...c,
+                role_id: c.role.role_id,
+                role: c.role.name
+            }
+        })
         parseSuccessOK(res, clients);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo clientes: ${error}`)
