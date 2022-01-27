@@ -75,6 +75,10 @@ controller.createUser = async(req, res) => {
         if (!payload.full_name || !payload.username || !payload.role_id || !payload.password)
             return parseError(res, 400, 'Debe provisionar nombre completo, nombre de usuario, contraseña y rol válidos.');
 
+        const existing_user = await User.query().where('username', payload.username);
+        if (existing_user.length > 0)
+            return parseError(res, 400, `Ya existe un nombre de usuario con el nombre ${payload.username}.`);
+
         const hashed_password = await _generateHashedPassword(payload.password);
         payload.password = hashed_password;
 
