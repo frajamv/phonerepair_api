@@ -132,7 +132,7 @@ controller.getClientData = async(req, res) => {
         const data = await User.query()
             .select('users.user_id', 'full_name', 'username', 'users.created_at')
             .where('users.user_id', id)
-            .withGraphFetched('[role, phones]');
+            .withGraphFetched('[role, phones.repairings]');
         parseSuccessOK(res, data[0]);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo datos del cliente: ${error}`)
