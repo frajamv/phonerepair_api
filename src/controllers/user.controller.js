@@ -40,6 +40,7 @@ controller.getAllClients = async(req, res) => {
         const clients = await User.query()
             .select('user_id', 'full_name', 'username', 'roles.name AS role', 'roles.role_id AS role_id', 'users.status')
             .where('roles.name', 'Cliente')
+            .leftJoin('phones', 'phones.user_id', 'users.user_id')
             .leftJoin('roles', 'roles.role_id', 'users.role_id');
         parseSuccessOK(res, clients);
     } catch (error) {
