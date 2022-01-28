@@ -23,7 +23,7 @@ controller.getAllUsers = async(req, res) => {
             .leftJoin('roles', 'roles.role_id', 'users.role_id');
         const data = {
             data: users,
-            token: generateAccessToken(req.user)
+            token: await generateAccessToken(req.user)
         }
         parseSuccessOK(res, data);
     } catch (error) {
@@ -55,7 +55,7 @@ controller.getAllClients = async(req, res) => {
         })
         const data = {
             data: clients,
-            token: generateAccessToken(req.user)
+            token: await generateAccessToken(req.user)
         }
         parseSuccessOK(res, data);
     } catch (error) {
@@ -95,7 +95,7 @@ controller.createUser = async(req, res) => {
         const response = {
             message: 'Usuario creado satisfactoriamente.',
             user_id: addition.id,
-            token: generateAccessToken(req.user)
+            token: await generateAccessToken(req.user)
         }
 
         return parseSuccess(res, 201, response);
@@ -146,7 +146,7 @@ controller.getClientData = async(req, res) => {
             .withGraphFetched('[role, phones.repairings]');
         const data = {
             data: user[0],
-            token: generateAccessToken(req.user)
+            token: await generateAccessToken(req.user)
         }
         parseSuccessOK(res, data);
     } catch (error) {
@@ -182,7 +182,7 @@ controller.login = async(req, res) => {
         const correct_password = await _comparePasswords(credentials.password, user.password);
         if (correct_password) {
             delete user.password
-            const token = generateAccessToken(user);
+            const token = await generateAccessToken(user);
             const payload = {
                 message: `¡Bienvenido, ${user.full_name}!`,
                 user: user,
@@ -190,12 +190,12 @@ controller.login = async(req, res) => {
             }
             return parseSuccessOK(res, payload)
         }
-
         const payload = {
             message: 'Contraseña incorrecta.',
         }
         return parseError(res, 400, payload)
     } catch (error) {
+        console.log(error)
         return parseError(res, 500, error)
     }
 }

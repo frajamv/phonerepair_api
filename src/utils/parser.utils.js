@@ -38,7 +38,7 @@ response.parseError = (http_response, status_code, message) => {
  * @returns Token con usuario.
  */
 response.generateAccessToken = async(user) => {
-    return jwt.sign({
+    return await jwt.sign({
             ...user
         },
         env.JWT_KEY, {
