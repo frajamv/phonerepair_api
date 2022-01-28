@@ -1,9 +1,7 @@
 //#region Importaciones
 const { parseSuccess, parseSuccessOK, parseError, generateAccessToken } = require('../utils/parser.utils');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const salt_rounds = 10;
-const env = process.env;
 const User = require('../models/user.model');
 //#endregion
 
