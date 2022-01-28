@@ -38,13 +38,7 @@ response.parseError = (http_response, status_code, message) => {
  * @returns Token con usuario.
  */
 response.generateAccessToken = async(user) => {
-    return await jwt.sign({
-            ...user
-        },
-        env.JWT_KEY, {
-            expiresIn: '3600s',
-        }
-    );
+    return await jwt.sign({...user }, env.JWT_KEY, { expiresIn: '1d' });
 }
 
 module.exports = response
