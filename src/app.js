@@ -1,3 +1,4 @@
+//#region IMPORTACIONES Y CONFIGURACIONES
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan')
@@ -8,8 +9,9 @@ const { Model } = require('objection');
 const Knex = require('knex');
 const db = Knex(config);
 Model.knex(db);
-
 app.set('port', env.PORT || 80);
+//#endregion
+
 
 // MIDDLEWARES:
 app.use(cors()); // Permitir comunicación entre servidores.

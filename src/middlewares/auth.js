@@ -3,7 +3,6 @@ const User = require('../models/user.model');
 const env = process.env;
 const { parseError } = require('../utils/parser.utils');
 
-
 /**
  * Verifica que el usuario este en el sistema y que tenga un rol ACTUALMENTE (En base de datos, no al iniciar sesion).
  * @param {*} req Peticion HTTP
@@ -25,8 +24,7 @@ const verifyToken = async(req, res, next) => {
     }
 
     const current = await User.query().where('user_id', req.user.user_id); // Obtener tados actuales del usuario en base de datos.
-
-    if (!current || !current[0].role_id || current[0].role_id === '')
+    if (!current[0] || !current[0].role_id || current[0].role_id === '')
         return parseError(res, 403, 'El usuario no tiene roles válidos en el sistema. Sus roles han sido eliminados dentro de su sesión.');
 
     return next();

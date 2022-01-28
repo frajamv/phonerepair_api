@@ -58,7 +58,7 @@ describe("User methods", () => {
      */
     it('Should insert a client to database.', async() => {
         req.body = {
-            full_name: 'Mario Orlando Carrillo Howard Arlington',
+            full_name: 'Mario Orlando Carrillo Howard Arlington (DEV TEST)',
             username: 'mocha',
             password: 'root123',
             role_id: 2

@@ -2,6 +2,9 @@ const { Router } = require('express')
 const router = Router()
 const auth = require('../middlewares/auth')
 
+/**
+ * Controlador de teléfonos que ejecutará las operaciones.
+ */
 const phone = require('../controllers/phone.controller')
 
 /**

@@ -35,7 +35,7 @@ describe("Phone methods", () => {
         req.body = {
             full_name: 'Lorem Ipsum Dolor Sit Amet',
             username: 'phoneowner',
-            password: 'root123',
+            password: 'root1234',
             role_id: 2
         }
         await userController.createUser(req, res);
