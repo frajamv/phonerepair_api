@@ -29,4 +29,19 @@ response.parseError = (http_response, status_code, message) => {
     http_response.status(status_code || 500).send(message)
 }
 
+/**
+ * Genera un token con el usuario provisto.
+ * @param {*} user Usuario con datos de acceso.
+ * @returns Token con usuario.
+ */
+response.generateAccessToken = async(user) => {
+    return jwt.sign({
+            ...user
+        },
+        env.JWT_KEY, {
+            expiresIn: '3600s',
+        }
+    );
+}
+
 module.exports = response

@@ -1,5 +1,5 @@
 //#region Importaciones
-const { parseSuccess, parseSuccessOK, parseError } = require('../utils/parser.utils');
+const { parseSuccess, parseSuccessOK, parseError, generateAccessToken } = require('../utils/parser.utils');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const salt_rounds = 10;
@@ -23,7 +23,11 @@ controller.getAllUsers = async(req, res) => {
         const users = await User.query()
             .select('user_id', 'full_name', 'username', 'roles.name AS role', 'roles.role_id AS role_id', 'users.status')
             .leftJoin('roles', 'roles.role_id', 'users.role_id');
-        parseSuccessOK(res, users);
+        const data = {
+            data: users,
+            token: generateAccessToken(req.user)
+        }
+        parseSuccessOK(res, data);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo usuarios: ${error}`)
     }
@@ -51,7 +55,11 @@ controller.getAllClients = async(req, res) => {
                 role: c.role.name
             }
         })
-        parseSuccessOK(res, clients);
+        const data = {
+            data: clients,
+            token: generateAccessToken(req.user)
+        }
+        parseSuccessOK(res, data);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo clientes: ${error}`)
     }
@@ -88,7 +96,8 @@ controller.createUser = async(req, res) => {
 
         const response = {
             message: 'Usuario creado satisfactoriamente.',
-            user_id: addition.id
+            user_id: addition.id,
+            token: generateAccessToken(req.user)
         }
 
         return parseSuccess(res, 201, response);
@@ -133,11 +142,15 @@ controller.deleteUser = async(req, res) => {
 controller.getClientData = async(req, res) => {
     try {
         const id = req.params.id;
-        const data = await User.query()
+        const user = await User.query()
             .select('users.user_id', 'full_name', 'username', 'users.created_at')
             .where('users.user_id', id)
             .withGraphFetched('[role, phones.repairings]');
-        parseSuccessOK(res, data[0]);
+        const data = {
+            data: user[0],
+            token: generateAccessToken(req.user)
+        }
+        parseSuccessOK(res, data);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo datos del cliente: ${error}`)
     }
@@ -171,14 +184,7 @@ controller.login = async(req, res) => {
         const correct_password = await _comparePasswords(credentials.password, user.password);
         if (correct_password) {
             delete user.password
-            const token = jwt.sign({
-                    ...user
-                },
-                env.JWT_KEY, {
-                    expiresIn: '3600s',
-                }
-            );
-
+            const token = generateAccessToken(user);
             const payload = {
                 message: `¡Bienvenido, ${user.full_name}!`,
                 user: user,
@@ -197,6 +203,7 @@ controller.login = async(req, res) => {
 }
 
 //#region Funciones privadas del controlador.
+
 /**
  * Crea una contraseña encriptada.
  * @param {*} plain_password Contraseña nueva en texto plano.

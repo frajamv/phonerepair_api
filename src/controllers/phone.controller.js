@@ -1,5 +1,5 @@
 //#region Importaciones
-const { parseSuccess, parseSuccessOK, parseError } = require('../utils/parser.utils');
+const { parseSuccess, parseSuccessOK, parseError, generateAccessToken } = require('../utils/parser.utils');
 const Phone = require('../models/phone.model');
 const Phone_repairing = require('../models/phone_repairing.model');
 //#endregion
@@ -33,7 +33,8 @@ controller.createUserPhone = async(req, res) => {
 
         const response = {
             message: 'Teléfono creado satisfactoriamente.',
-            phone_id: addition.id
+            phone_id: addition.id,
+            token: generateAccessToken(req.user)
         }
 
         return parseSuccess(res, 201, response);
@@ -60,7 +61,7 @@ controller.deletePhone = async(req, res) => {
             return parseError(res, 500, 'No se pudo eliminar al telefono.');
 
         const response = {
-            message: 'Telefono eliminado de la base de datos.'
+            message: 'Telefono eliminado de la base de datos.',
         }
 
         return parseSuccessOK(res, response);
@@ -107,7 +108,11 @@ controller.getAllPhoneRepairings = async(req, res) => {
         const repairings = await Phone_repairing.query()
             .withGraphFetched('[phone.user]')
             .orderBy('created_at', 'DESC');
-        parseSuccessOK(res, repairings);
+        const data = {
+            data: repairings,
+            token: generateAccessToken(req.user)
+        }
+        parseSuccessOK(res, data);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo reparaciones: ${error}`)
     }
@@ -125,7 +130,11 @@ controller.getPhoneRepairings = async(req, res) => {
         const repairings = await Phone_repairing.query()
             .where('phone_id', id)
             .orderBy('created_at', 'DESC');
-        parseSuccessOK(res, repairings);
+        const data = {
+            data: repairings,
+            token: generateAccessToken(req.user)
+        }
+        parseSuccessOK(res, data);
     } catch (error) {
         return parseError(res, 500, `Error obteniendo reparaciones: ${error}`)
     }
@@ -155,7 +164,8 @@ controller.createPhoneRepairings = async(req, res) => {
 
         const response = {
             message: 'Reparación de teléfono creada satisfactoriamente.',
-            phone_repairing_id: addition.id
+            phone_repairing_id: addition.id,
+            token: generateAccessToken(req.user)
         }
 
         return parseSuccess(res, 201, response);
